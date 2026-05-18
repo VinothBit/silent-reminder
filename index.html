@@ -1,247 +1,622 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Silent Reminder</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
 }
 
 body{
-    background:#121212;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+background:#0b0b14;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+overflow:hidden;
 }
 
 .app{
-    width:360px;
-    height:740px;
-    background:#1e1e1e;
-    border-radius:30px;
-    overflow:hidden;
-    box-shadow:0 0 20px rgba(0,0,0,0.5);
-    position:relative;
+width:390px;
+height:844px;
+background:#141423;
+border-radius:35px;
+overflow:hidden;
+position:relative;
+box-shadow:0 0 50px rgba(0,0,0,0.7);
 }
-
-/* HEADER */
 
 .header{
-    background:#7c3aed;
-    padding:20px;
-    text-align:center;
+padding:25px 20px 10px;
 }
 
-.header h1{
-    font-size:24px;
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
-/* CONTENT */
-
-.content{
-    padding:20px;
-    overflow-y:auto;
-    height:620px;
+.profile{
+display:flex;
+align-items:center;
+gap:12px;
 }
 
-/* CARD */
+.avatar{
+width:55px;
+height:55px;
+border-radius:50%;
+background:linear-gradient(135deg,#7c3aed,#4f46e5);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+font-weight:700;
+}
+
+.notify{
+width:48px;
+height:48px;
+background:#222238;
+border-radius:15px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+transition:0.3s;
+}
+
+.notify:hover{
+background:#7c3aed;
+}
+
+.search{
+margin-top:20px;
+background:#222238;
+padding:15px;
+border-radius:18px;
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.search input{
+width:100%;
+background:none;
+border:none;
+outline:none;
+color:white;
+font-size:14px;
+}
+
+.banner{
+margin:20px;
+padding:22px;
+border-radius:25px;
+background:linear-gradient(135deg,#7c3aed,#4f46e5);
+position:relative;
+overflow:hidden;
+}
+
+.banner::after{
+content:'';
+position:absolute;
+width:150px;
+height:150px;
+border-radius:50%;
+background:rgba(255,255,255,0.08);
+right:-50px;
+top:-50px;
+}
+
+.banner h1{
+font-size:26px;
+margin-bottom:10px;
+}
+
+.banner p{
+font-size:13px;
+color:#ddd;
+line-height:1.6;
+}
+
+.stats{
+display:flex;
+gap:15px;
+padding:0 20px;
+}
 
 .card{
-    background:#2a2a2a;
-    padding:15px;
-    border-radius:18px;
-    margin-bottom:15px;
+flex:1;
+background:#222238;
+padding:18px;
+border-radius:22px;
 }
 
 .card h3{
-    margin-bottom:8px;
+font-size:14px;
+color:#aaa;
+margin-bottom:10px;
 }
 
-.time{
-    color:#a78bfa;
-    font-size:14px;
+.card h1{
+font-size:30px;
 }
 
-/* BUTTON */
-
-.add-btn{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:15px;
-    background:#7c3aed;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    margin-top:10px;
+.section-title{
+padding:25px 20px 15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
-.add-btn:hover{
-    background:#6d28d9;
+.tasks{
+padding:0 20px;
+display:flex;
+flex-direction:column;
+gap:15px;
+height:340px;
+overflow-y:auto;
 }
 
-/* INPUT */
-
-input, select{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    border-radius:12px;
-    background:#333;
-    color:white;
+.task{
+background:#222238;
+padding:18px;
+border-radius:22px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+transition:0.3s;
 }
 
-/* PRIORITY */
+.task:hover{
+transform:translateY(-3px);
+background:#2b2b46;
+}
+
+.left{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.circle{
+width:18px;
+height:18px;
+border-radius:50%;
+}
+
+.green{
+background:#22c55e;
+}
+
+.red{
+background:#ef4444;
+}
+
+.blue{
+background:#3b82f6;
+}
+
+.task-info h4{
+font-size:15px;
+margin-bottom:5px;
+}
+
+.task-info p{
+font-size:12px;
+color:#aaa;
+}
 
 .priority{
-    display:flex;
-    gap:10px;
-    margin-top:10px;
+padding:6px 14px;
+border-radius:12px;
+font-size:12px;
+background:#7c3aed;
 }
 
-.priority button{
-    flex:1;
-    padding:10px;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-    color:white;
+.bottom{
+position:absolute;
+bottom:0;
+width:100%;
+height:80px;
+background:#19192c;
+display:flex;
+justify-content:space-around;
+align-items:center;
+border-top:1px solid rgba(255,255,255,0.05);
 }
-
-.low{
-    background:#16a34a;
-}
-
-.medium{
-    background:#f59e0b;
-}
-
-.high{
-    background:#dc2626;
-}
-
-/* BOTTOM NAV */
 
 .nav{
-    position:absolute;
-    bottom:0;
-    width:100%;
-    background:#272727;
-    display:flex;
-    justify-content:space-around;
-    padding:15px 0;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:4px;
+font-size:12px;
+color:#aaa;
+cursor:pointer;
+transition:0.3s;
 }
 
-.nav button{
-    background:none;
-    border:none;
-    color:white;
-    font-size:14px;
-    cursor:pointer;
+.nav:hover{
+color:#7c3aed;
 }
 
-.nav button:hover{
-    color:#a78bfa;
+.active{
+color:#7c3aed;
+}
+
+.fab{
+position:absolute;
+bottom:95px;
+right:20px;
+width:65px;
+height:65px;
+border-radius:50%;
+background:linear-gradient(135deg,#7c3aed,#4f46e5);
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:35px;
+cursor:pointer;
+transition:0.3s;
+box-shadow:0 10px 25px rgba(124,58,237,0.5);
+}
+
+.fab:hover{
+transform:scale(1.1) rotate(90deg);
+}
+
+.modal{
+position:absolute;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+backdrop-filter:blur(10px);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:100;
+}
+
+.modal-box{
+width:85%;
+background:#1f1f33;
+padding:25px;
+border-radius:25px;
+}
+
+.modal-box h2{
+margin-bottom:20px;
+}
+
+.modal-box input,
+.modal-box select{
+width:100%;
+padding:14px;
+margin-bottom:15px;
+border:none;
+outline:none;
+border-radius:15px;
+background:#2a2a45;
+color:white;
+}
+
+.modal-box button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:15px;
+background:#7c3aed;
+color:white;
+font-size:15px;
+font-weight:600;
+cursor:pointer;
+}
+
+.page{
+display:none;
+}
+
+.show{
+display:block;
+}
+
+.center-page{
+padding:50px 20px;
+text-align:center;
+}
+
+.center-page h1{
+margin-bottom:15px;
+}
+
+::-webkit-scrollbar{
+width:4px;
+}
+
+::-webkit-scrollbar-thumb{
+background:#555;
+border-radius:10px;
 }
 
 </style>
 </head>
-
 <body>
 
 <div class="app">
 
-    <div class="header">
-        <h1>Silent Reminder</h1>
-    </div>
+<div class="modal" id="modal">
+<div class="modal-box">
+<h2>Add Reminder</h2>
+<input type="text" id="taskName" placeholder="Reminder Title">
+<input type="time" id="taskTime">
+<select id="taskPriority">
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+<button onclick="saveTask()">Save Reminder</button>
+</div>
+</div>
 
-    <div class="content">
+<div id="homePage" class="page show">
 
-        <!-- ADD REMINDER -->
+<div class="header">
+<div class="top">
+<div class="profile">
+<div class="avatar">D</div>
+<div>
+<h3>Das</h3>
+<p style="color:#aaa;font-size:12px;">Manage your reminders</p>
+</div>
+</div>
+<div class="notify">🔔</div>
+</div>
 
-        <div class="card">
-            <h3>Add Reminder</h3>
+<div class="search">
+🔍
+<input type="text" id="searchInput" placeholder="Search reminders...">
+</div>
+</div>
 
-            <input type="text" id="title" placeholder="Reminder title">
+<div class="banner">
+<h1>Silent Reminder</h1>
+<p>Organize your tasks, schedules and reminders with smart notifications.</p>
+</div>
 
-            <input type="time" id="time">
+<div class="stats">
+<div class="card">
+<h3>Total Tasks</h3>
+<h1 id="totalTasks">0</h1>
+</div>
 
-            <select id="category">
-                <option>Work</option>
-                <option>Personal</option>
-                <option>Study</option>
-                <option>Meeting</option>
-            </select>
+<div class="card">
+<h3>Completed</h3>
+<h1 id="completedTasks">0</h1>
+</div>
+</div>
 
-            <div class="priority">
-                <button class="low">Low</button>
-                <button class="medium">Medium</button>
-                <button class="high">High</button>
-            </div>
+<div class="section-title">
+<h3>Today's Tasks</h3>
+<span id="taskCount">0 Tasks</span>
+</div>
 
-            <button class="add-btn" onclick="addReminder()">
-                Add Reminder
-            </button>
-        </div>
+<div class="tasks" id="taskContainer"></div>
 
-        <!-- REMINDER LIST -->
+</div>
 
-        <div id="reminder-list"></div>
+<div id="calendarPage" class="page center-page">
+<h1>📅 Calendar</h1>
+<p>Calendar integration coming soon.</p>
+</div>
 
-    </div>
+<div id="statsPage" class="page center-page">
+<h1>📊 Statistics</h1>
+<p>Track your productivity and reminders.</p>
+</div>
 
-    <!-- BOTTOM NAV -->
+<div id="settingsPage" class="page center-page">
+<h1>⚙️ Settings</h1>
+<p>Dark mode and app preferences.</p>
+</div>
 
-    <div class="nav">
-        <button>Home</button>
-        <button>Reminder</button>
-        <button>Settings</button>
-    </div>
+<div class="fab" onclick="openModal()">+</div>
+
+<div class="bottom">
+<div class="nav active" onclick="showPage('homePage',this)">
+🏠
+<span>Home</span>
+</div>
+
+<div class="nav" onclick="showPage('calendarPage',this)">
+📅
+<span>Calendar</span>
+</div>
+
+<div class="nav" onclick="showPage('statsPage',this)">
+📊
+<span>Stats</span>
+</div>
+
+<div class="nav" onclick="showPage('settingsPage',this)">
+⚙️
+<span>Settings</span>
+</div>
+</div>
 
 </div>
 
 <script>
 
-const reminderList = document.getElementById("reminder-list");
+const modal = document.getElementById('modal');
+const taskContainer = document.getElementById('taskContainer');
+const totalTasks = document.getElementById('totalTasks');
+const taskCount = document.getElementById('taskCount');
 
-function addReminder(){
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-    const title = document.getElementById("title").value;
-    const time = document.getElementById("time").value;
-    const category = document.getElementById("category").value;
+if(Notification.permission !== "granted"){
+  Notification.requestPermission();
+}
 
-    if(title === "" || time === ""){
-        alert("Please fill all fields");
-        return;
-    }
+function openModal(){
+  modal.style.display='flex';
+}
 
-    const card = document.createElement("div");
-    card.classList.add("card");
+window.onclick = function(e){
+  if(e.target == modal){
+    modal.style.display='none';
+  }
+}
 
-    card.innerHTML = `
-        <h3>${title}</h3>
-        <p class="time">${time}</p>
-        <p>${category}</p>
+function saveTask(){
+
+  const taskName = document.getElementById('taskName').value;
+  const taskTime = document.getElementById('taskTime').value;
+  const taskPriority = document.getElementById('taskPriority').value;
+
+  if(taskName === '' || taskTime === ''){
+    alert('Please fill all fields');
+    return;
+  }
+
+  const task = {
+    name: taskName,
+    time: taskTime,
+    priority: taskPriority,
+    notified:false
+  };
+
+  tasks.push(task);
+
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+  renderTasks();
+
+  modal.style.display='none';
+
+  document.getElementById('taskName').value='';
+  document.getElementById('taskTime').value='';
+}
+
+function renderTasks(){
+
+  taskContainer.innerHTML='';
+
+  tasks.forEach((task,index)=>{
+
+    let color='blue';
+
+    if(task.priority==='High') color='red';
+    if(task.priority==='Medium') color='blue';
+    if(task.priority==='Low') color='green';
+
+    const div = document.createElement('div');
+
+    div.classList.add('task');
+
+    div.innerHTML=`
+
+    <div class="left">
+
+      <div class="circle ${color}"></div>
+
+      <div class="task-info">
+        <h4>${task.name}</h4>
+        <p>${task.time}</p>
+      </div>
+
+    </div>
+
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="priority">${task.priority}</div>
+
+      <div onclick="deleteTask(${index})"
+      style="cursor:pointer;font-size:18px;">
+      🗑️
+      </div>
+
+    </div>
+
     `;
 
-    reminderList.appendChild(card);
+    taskContainer.appendChild(div);
 
-    document.getElementById("title").value = "";
-    document.getElementById("time").value = "";
+  });
+
+  totalTasks.innerText = tasks.length;
+  taskCount.innerText = tasks.length + ' Tasks';
+}
+
+function deleteTask(index){
+
+  tasks.splice(index,1);
+
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+  renderTasks();
+}
+
+function showPage(pageId,element){
+
+  const pages = document.querySelectorAll('.page');
+
+  pages.forEach(page=>page.classList.remove('show'));
+
+  document.getElementById(pageId).classList.add('show');
+
+  const navs = document.querySelectorAll('.nav');
+
+  navs.forEach(nav=>nav.classList.remove('active'));
+
+  element.classList.add('active');
+}
+
+function checkReminders(){
+
+  const now = new Date();
+
+  const currentTime =
+  now.getHours().toString().padStart(2,'0')
+  + ':' +
+  now.getMinutes().toString().padStart(2,'0');
+
+  tasks.forEach(task=>{
+
+    if(task.time === currentTime && !task.notified){
+
+      new Notification("⏰ Reminder Alert",{
+        body: task.name,
+        icon:'https://cdn-icons-png.flaticon.com/512/1827/1827392.png'
+      });
+
+      alert("Reminder: " + task.name);
+
+      task.notified = true;
+
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+  });
 
 }
+
+setInterval(checkReminders,1000);
+
+renderTasks();
 
 </script>
 
 </body>
 </html>
+```
+
