@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silent Reminder — Gentle. Smart. On Time.</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.6.0/dist/tabler-icons.min.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark"><i class="ti ti-bell-ringing"></i></div>
+    <div class="logo-text">
+      <span class="logo-name">Silent</span>
+      <span class="logo-sub">Reminder</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="nav-link active" data-view="dashboard" onclick="showView('dashboard')">
+      <i class="ti ti-layout-dashboard"></i><span>Dashboard</span>
+    </a>
+    <a class="nav-link" data-view="reminders" onclick="showView('reminders')">
+      <i class="ti ti-bell"></i><span>All Reminders</span>
+      <span class="nav-badge" id="navBadge">0</span>
+    </a>
+    <a class="nav-link" data-view="calendar" onclick="showView('calendar')">
+      <i class="ti ti-calendar"></i><span>Calendar</span>
+    </a>
+    <a class="nav-link" data-view="settings" onclick="showView('settings')">
+      <i class="ti ti-settings"></i><span>Settings</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-stats">
+      <div class="stat-pill"><i class="ti ti-check"></i><span id="sidebarDone">0</span> done</div>
+      <div class="stat-pill"><i class="ti ti-clock"></i><span id="sidebarUpcoming">0</span> upcoming</div>
+    </div>
+    <div class="sidebar-version">v1.0 · Fully Offline</div>
+  </div>
+</aside>
+
+<!-- MOBILE TOP BAR -->
+<header class="mobile-header">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+    <i class="ti ti-menu-2"></i>
+  </button>
+  <div class="mobile-logo">
+    <i class="ti ti-bell-ringing"></i> Silent Reminder
+  </div>
+  <button class="mobile-add-btn" onclick="openModal()"><i class="ti ti-plus"></i></button>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="main" id="main">
+
+  <!-- ==================== DASHBOARD VIEW ==================== -->
+  <div class="view active" id="view-dashboard">
+    <div class="view-header">
+      <div>
+        <div class="view-eyebrow">Good day</div>
+        <h1 class="view-title">Dashboard</h1>
+      </div>
+      <button class="btn-primary" onclick="openModal()">
+        <i class="ti ti-plus"></i> New Reminder
+      </button>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="stats-grid">
+      <div class="stat-card stat-total">
+        <div class="stat-icon"><i class="ti ti-bell"></i></div>
+        <div class="stat-info">
+          <div class="stat-label">Total</div>
+          <div class="stat-value" id="statTotal">0</div>
+        </div>
+      </div>
+      <div class="stat-card stat-today">
+        <div class="stat-icon"><i class="ti ti-calendar-event"></i></div>
+        <div class="stat-info">
+          <div class="stat-label">Today</div>
+          <div class="stat-value" id="statToday">0</div>
+        </div>
+      </div>
+      <div class="stat-card stat-upcoming">
+        <div class="stat-icon"><i class="ti ti-clock"></i></div>
+        <div class="stat-info">
+          <div class="stat-label">Upcoming</div>
+          <div class="stat-value" id="statUpcoming">0</div>
+        </div>
+      </div>
+      <div class="stat-card stat-done">
+        <div class="stat-icon"><i class="ti ti-circle-check"></i></div>
+        <div class="stat-info">
+          <div class="stat-label">Completed</div>
+          <div class="stat-value" id="statDone">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODAY'S REMINDERS -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Today's Reminders</h2>
+        <a class="section-link" onclick="showView('reminders')">View all <i class="ti ti-arrow-right"></i></a>
+      </div>
+      <div id="todayList" class="reminder-list"></div>
+    </div>
+
+    <!-- UPCOMING -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Upcoming</h2>
+      </div>
+      <div id="upcomingList" class="reminder-list"></div>
+    </div>
+  </div>
+
+  <!-- ==================== REMINDERS VIEW ==================== -->
+  <div class="view" id="view-reminders">
+    <div class="view-header">
+      <div>
+        <div class="view-eyebrow">Manage</div>
+        <h1 class="view-title">All Reminders</h1>
+      </div>
+      <button class="btn-primary" onclick="openModal()">
+        <i class="ti ti-plus"></i> New Reminder
+      </button>
+    </div>
+
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <i class="ti ti-search"></i>
+        <input type="text" id="searchInput" placeholder="Search reminders..." oninput="filterReminders()">
+      </div>
+      <div class="filter-tabs">
+        <button class="ftab active" data-f="all" onclick="setFilter(this,'all')">All</button>
+        <button class="ftab" data-f="today" onclick="setFilter(this,'today')">Today</button>
+        <button class="ftab" data-f="upcoming" onclick="setFilter(this,'upcoming')">Upcoming</button>
+        <button class="ftab" data-f="done" onclick="setFilter(this,'done')">Done</button>
+      </div>
+      <div class="sort-wrap">
+        <select id="sortSelect" onchange="filterReminders()">
+          <option value="date">Sort by Date</option>
+          <option value="priority">Sort by Priority</option>
+          <option value="cat">Sort by Category</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="allReminderList" class="reminder-list reminder-list-full"></div>
+  </div>
+
+  <!-- ==================== CALENDAR VIEW ==================== -->
+  <div class="view" id="view-calendar">
+    <div class="view-header">
+      <div>
+        <div class="view-eyebrow">Schedule</div>
+        <h1 class="view-title">Calendar</h1>
+      </div>
+      <div class="cal-nav">
+        <button class="icon-btn" onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+        <span id="calMonthLabel"></span>
+        <button class="icon-btn" onclick="changeMonth(1)"><i class="ti ti-chevron-right"></i></button>
+      </div>
+    </div>
+    <div class="calendar-wrap">
+      <div class="cal-dow-row">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="section" style="margin-top:2rem">
+      <h2 class="section-title" id="calDayLabel">Select a day</h2>
+      <div id="calDayList" class="reminder-list"></div>
+    </div>
+  </div>
+
+  <!-- ==================== SETTINGS VIEW ==================== -->
+  <div class="view" id="view-settings">
+    <div class="view-header">
+      <div>
+        <div class="view-eyebrow">Preferences</div>
+        <h1 class="view-title">Settings</h1>
+      </div>
+    </div>
+
+    <div class="settings-layout">
+      <div class="settings-group">
+        <div class="settings-group-title">Notifications</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="sicon sicon-purple"><i class="ti ti-bell"></i></div>
+            <div>
+              <div class="srow-label">Default Notification Mode</div>
+              <div class="srow-sub">Applied when creating new reminders</div>
+            </div>
+          </div>
+          <select class="srow-select" id="defaultModeSelect">
+            <option value="silent">Silent</option>
+            <option value="sound">Sound</option>
+            <option value="vibrate">Vibration</option>
+            <option value="custom">Sound + Vibrate</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="sicon sicon-amber"><i class="ti ti-alarm"></i></div>
+            <div>
+              <div class="srow-label">Allow Snooze</div>
+              <div class="srow-sub">Show snooze option on notifications</div>
+            </div>
+          </div>
+          <div class="toggle" id="snoozeToggle" onclick="toggleSetting('snoozeToggle')">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="sicon sicon-green"><i class="ti ti-repeat"></i></div>
+            <div>
+              <div class="srow-label">Smart Repeat Suggestions</div>
+              <div class="srow-sub">AI suggests intervals based on habits</div>
+            </div>
+          </div>
+          <div class="toggle" id="smartToggle" onclick="toggleSetting('smartToggle')">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Appearance</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="sicon sicon-blue"><i class="ti ti-moon"></i></div>
+            <div>
+              <div class="srow-label">Dark Mode</div>
+              <div class="srow-sub">Switch between dark and light theme</div>
+            </div>
+          </div>
+          <div class="toggle on" id="darkToggle" onclick="toggleDarkMode()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="sicon sicon-pink"><i class="ti ti-language"></i></div>
+            <div>
+              <div class="srow-label">Language</div>
+            </div>
+          </div>
+          <select class="srow-select">
+            <option>English</option>
+            <option>Tamil</option>
+            <option>Hindi</option>
+            <option>Spanish</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Data & Security</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="sicon sicon-red"><i class="ti ti-lock"></i></div>
+            <div>
+              <div class="srow-label">PIN Lock</div>
+              <div class="srow-sub">Require PIN to open the app</div>
+            </div>
+          </div>
+          <div class="toggle" id="pinToggle" onclick="toggleSetting('pinToggle')">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        <div class="settings-row clickable" onclick="exportData()">
+          <div class="settings-row-left">
+            <div class="sicon sicon-green"><i class="ti ti-download"></i></div>
+            <div>
+              <div class="srow-label">Export Reminders</div>
+              <div class="srow-sub">Download as JSON file</div>
+            </div>
+          </div>
+          <i class="ti ti-chevron-right" style="color:var(--text3)"></i>
+        </div>
+        <div class="settings-row clickable" onclick="if(confirm('Clear all reminders?')){reminders=[];save();renderAll();showToast('All reminders cleared','ti-trash');}">
+          <div class="settings-row-left">
+            <div class="sicon sicon-red"><i class="ti ti-trash"></i></div>
+            <div>
+              <div class="srow-label">Clear All Data</div>
+              <div class="srow-sub">Permanently delete all reminders</div>
+            </div>
+          </div>
+          <i class="ti ti-chevron-right" style="color:var(--text3)"></i>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">About</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="sicon sicon-purple"><i class="ti ti-info-circle"></i></div>
+            <div><div class="srow-label">Silent Reminder</div><div class="srow-sub">Version 1.0 · Runs fully offline · No data leaves your device</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ==================== MODAL ==================== -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle">New Reminder</h2>
+      <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label">Title <span class="required">*</span></label>
+          <input class="field-input" id="f-title" type="text" placeholder="What do you need to remember?">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label">Description</label>
+          <textarea class="field-input" id="f-desc" rows="2" placeholder="Add details..."></textarea>
+        </div>
+      </div>
+      <div class="form-row two-col">
+        <div class="field">
+          <label class="field-label">Date</label>
+          <input class="field-input" id="f-date" type="date">
+        </div>
+        <div class="field">
+          <label class="field-label">Time</label>
+          <input class="field-input" id="f-time" type="time">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Notification Mode</label>
+        <div class="notify-grid" id="notifyGrid">
+          <div class="notify-opt selected" data-mode="silent" onclick="selectMode(this)">
+            <i class="ti ti-bell-off"></i><span>Silent</span>
+          </div>
+          <div class="notify-opt" data-mode="sound" onclick="selectMode(this)">
+            <i class="ti ti-bell"></i><span>Sound</span>
+          </div>
+          <div class="notify-opt" data-mode="vibrate" onclick="selectMode(this)">
+            <i class="ti ti-antenna"></i><span>Vibration</span>
+          </div>
+          <div class="notify-opt" data-mode="custom" onclick="selectMode(this)">
+            <i class="ti ti-adjustments"></i><span>Custom</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-row two-col">
+        <div class="field">
+          <label class="field-label">Category</label>
+          <div class="chip-row" id="catRow">
+            <div class="chip cat-chip" data-cat="work" onclick="selectCat(this)">Work</div>
+            <div class="chip cat-chip selected" data-cat="personal" onclick="selectCat(this)">Personal</div>
+            <div class="chip cat-chip" data-cat="health" onclick="selectCat(this)">Health</div>
+            <div class="chip cat-chip" data-cat="study" onclick="selectCat(this)">Study</div>
+            <div class="chip cat-chip" data-cat="shopping" onclick="selectCat(this)">Shopping</div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Repeat</label>
+          <div class="chip-row" id="repeatRow">
+            <div class="chip rep-chip selected" data-rep="none" onclick="selectRepeat(this)">Once</div>
+            <div class="chip rep-chip" data-rep="daily" onclick="selectRepeat(this)">Daily</div>
+            <div class="chip rep-chip" data-rep="weekly" onclick="selectRepeat(this)">Weekly</div>
+            <div class="chip rep-chip" data-rep="monthly" onclick="selectRepeat(this)">Monthly</div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Priority</label>
+        <div class="priority-row">
+          <button class="pri-btn low" onclick="selectPriority(this)"><i class="ti ti-circle-filled"></i> Low</button>
+          <button class="pri-btn med selected" onclick="selectPriority(this)"><i class="ti ti-circle-filled"></i> Medium</button>
+          <button class="pri-btn high" onclick="selectPriority(this)"><i class="ti ti-circle-filled"></i> High</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveReminder()"><i class="ti ti-check"></i> Save Reminder</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="detail-panel" id="detailPanel">
+  <div class="detail-inner" id="detailInner"></div>
+</div>
+<div class="detail-backdrop" id="detailBackdrop" onclick="closeDetail()"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <i class="ti ti-check toast-icon" id="toastIcon"></i>
+  <span id="toastText"></span>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
